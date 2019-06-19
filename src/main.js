@@ -4,6 +4,8 @@ import { store } from './store/store'
 
 Vue.config.productionTip = false
 
+window.eventBus = new Vue()
+
 new Vue({
   render: h => h(App),
   store: store,

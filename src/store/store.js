@@ -118,9 +118,7 @@ export const store = new Vuex.Store({
             })
         },
         updateFilter(context, filter) {
-
-                context.commit('updateFilter', filter)
-     
+            context.commit('updateFilter', filter)
         },
         clearCompleted(context) {
 

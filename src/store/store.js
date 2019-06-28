@@ -89,11 +89,6 @@ export const store = new Vuex.Store({
                 context.commit('deleteTodo', id)
             }, 100);
         },
-        updateTodo(context, filter) {
-            setTimeout(() => {
-                context.commit('updateTodo', filter)
-            }, 100);
-        },
         checkAll(context, checked) {
             setTimeout(() => {
                 context.commit('checkAll', checked)

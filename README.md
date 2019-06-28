@@ -1,6 +1,6 @@
 # <p align="center">Todo App</p>
 
-<p align="center"><img src="https://github.com/alikamal1/todo-app/master/screenshot_1.png" width="400"></p>
+<p align="center"><img src="https://github.com/alikamal1/todo-app/master/screenshot_1.PNG" width="400"></p>
 
 ## First Branch: Vue + Vuex
 

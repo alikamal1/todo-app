@@ -1,5 +1,15 @@
 # todo-app
 
+<p align="center"><img src="https://github.com/alikamal1/todo-app/master/screenshout_1.png" width="400"></p>
+
+## First Branch: Vue + Vuex
+
+## Second Branch: Vue + API 
+
+## Third Branch: Vue + Firebase 
+
+## Fourth Branch: Vue + Router 
+
 ## Project setup
 ```
 npm install
@@ -9,21 +19,3 @@ npm install
 ```
 npm run serve
 ```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

@@ -2,13 +2,14 @@
 
 <p align="center"><img src="https://github.com/alikamal1/todo-app/blob/master/screenshot_1.PNG" width="400"></p>
 
-### [ ✓ ] First Branch: Vue + Vuex
+#### [ ✓ ] First Branch: Vue + Vuex
 
-### [  ] Second Branch: Vue + API 
+#### [  ] Second Branch: Vue + API 
 
-### [  ] Third Branch: Vue + Firebase 
+#### [  ] Third Branch: Vue + Firebase 
 
-### [  ] Fourth Branch: Vue + Router 
+#### [  ] Fourth Branch: Vue + Router 
+
 
 ## Project setup
 

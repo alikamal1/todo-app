@@ -6,8 +6,7 @@ Vue.use(Vuex)
 export const store = new Vuex.Store({
     state: {
         filter: 'all',
-        todos: [
-            {
+        todos: [{
                 'id': 1,
                 'title': 'Go Home',
                 'completed': false,
@@ -60,16 +59,19 @@ export const store = new Vuex.Store({
                 'editing': todo.editing
             })
         },
-        deletedTodo(state, id) {
+        deleteTodo(state, id) {
             const index = state.todos.findIndex(item => item.id == id)
             state.todos.splice(index, 1)
         },
-        UpdateFilter(state, filter) {
+        updateFilter(state, filter) {
             state.filter = filter
         },
         clearCompleted(state) {
             state.todos = state.todos.filter(todo => !todo.completed)
-        }
+        },
+        checkAll(state, checked) {
+            state.todos.forEach(todo => (todo.completed = checked))
+        },
     },
     actions: {
         addTodo(context, todo) {
@@ -82,7 +84,7 @@ export const store = new Vuex.Store({
                 context.commit('updateTodo', todo)
             }, 100);
         },
-        deletedTodo(context, id) {
+        deleteTodo(context, id) {
             setTimeout(() => {
                 context.commit('deleteTodo', id)
             }, 100);
@@ -91,6 +93,16 @@ export const store = new Vuex.Store({
             setTimeout(() => {
                 context.commit('updateTodo', filter)
             }, 100);
+        },
+        checkAll(context, checked) {
+            setTimeout(() => {
+                context.commit('checkAll', checked)
+            }, 100)
+        },
+        updateFilter(context, filter) {
+            setTimeout(() => {
+                context.commit('updateFilter', filter)
+            }, 100)
         },
         clearCompleted(context) {
             setTimeout(() => {

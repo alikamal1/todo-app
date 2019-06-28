@@ -1,24 +1,14 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import db from '../firebase'
 
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
     state: {
+        loading: true,
         filter: 'all',
-        todos: [{
-                'id': 1,
-                'title': 'Go Home',
-                'completed': false,
-                'editing': false,
-            },
-            {
-                'id': 2,
-                'title': 'Start Coding',
-                'completed': false,
-                'editing': false,
-            },
-        ]
+        todos: []
     },
     getters: {
         remaining(state) {
@@ -72,37 +62,85 @@ export const store = new Vuex.Store({
         checkAll(state, checked) {
             state.todos.forEach(todo => (todo.completed = checked))
         },
+        retrieveTodos(state, todos) {
+            state.todos = todos
+        }
     },
     actions: {
+        retrieveTodos(context) {
+            context.state.loading = true
+            db.collection('todos').get().then(querySnapshot => {
+                let tempTodos = []
+                querySnapshot.forEach(doc => {
+                    console.log(doc.data())
+                    const data = {
+                        id: doc.id,
+                        title: doc.data().title,
+                        completed: doc.data().completed,
+                        timestamp: doc.data().timestamp,
+                    }
+                    tempTodos.push(data)
+                })
+                context.state.loading = false
+                const tempTodosSorted = tempTodos.sort((a, b) => {
+                    return a.timestamp.seconds - b.timestamp.seconds
+                })
+                context.commit('retrieveTodos', tempTodosSorted)
+            })
+        },
         addTodo(context, todo) {
-            setTimeout(() => {
-                context.commit('addTodo', todo)
-            }, 100);
+            db.collection('todos').add({
+                title: todo.title,
+                completed: false,
+                timestamp: new Date(),
+            }).then(docRef => {
+                context.commit('addTodo', {
+                    id: docRef.id,
+                    title: todo.title,
+                    completed: false,
+                })
+            })
+
         },
         updateTodo(context, todo) {
-            setTimeout(() => {
+            db.collection('todos').doc(todo.id).set({
+                id: todo.id,
+                title: todo.title,
+                completed: todo.completed,
+                timestamp: new Date(),
+            }).then(() => {
                 context.commit('updateTodo', todo)
-            }, 100);
+
+            })
         },
         deleteTodo(context, id) {
-            setTimeout(() => {
+            db.collection('todos').doc(id).delete().then(() => {
                 context.commit('deleteTodo', id)
-            }, 100);
+
+            })
         },
         checkAll(context, checked) {
-            setTimeout(() => {
-                context.commit('checkAll', checked)
-            }, 100)
+            db.collection('todos').get().then(querySnapshot => {
+                querySnapshot.forEach(doc => {
+                    doc.ref.update({
+                        completed: checked
+                    }).then(() => {
+                        context.commit('checkAll', checked)
+                    })
+                })
+            })
         },
         updateFilter(context, filter) {
-            setTimeout(() => {
-                context.commit('updateFilter', filter)
-            }, 100)
+            context.commit('updateFilter', filter)
         },
         clearCompleted(context) {
-            setTimeout(() => {
-                context.commit('clearCompleted')
-            }, 100);
+            db.collection('todos').where('completed', '==', true).get().then(querySnapshot => {
+                querySnapshot.forEach(doc => {
+                    doc.ref.delete().then(() => {
+                        context.commit('clearCompleted')
+                    })
+                })
+            })
         }
     }
 })

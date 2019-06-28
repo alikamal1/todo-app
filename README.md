@@ -14,7 +14,6 @@
 <a href="https://github.com/alikamal1/todo-app-api" target="_blank">https://github.com/alikamal1/todo-app-api</a>
 
 ## Project setup
-
 ```
 npm install
 ```

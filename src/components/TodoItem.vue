@@ -59,6 +59,7 @@ export default {
     checkAll() {
       this.completed = this.checkAll ? true : this.todo.completed;
     },
+    //watch when props change data should change too
     todo() {
       this.title = this.todo.title
       this.completed = this.todo.completed

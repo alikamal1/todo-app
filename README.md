@@ -8,6 +8,8 @@
 
 #### [ ✓ ] Third Branch: Vue + Firebase 
 
+#### [ ✓ ] Third Branch: Vue + Realtime 
+
 #### [  ] Fourth Branch: Vue + Router 
 
 

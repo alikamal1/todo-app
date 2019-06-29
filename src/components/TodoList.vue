@@ -63,6 +63,7 @@ export default {
     };
   },
   created() {
+    this.$store.dispatch('initRealTimeListiners')
     this.$store.dispatch("retrieveTodos");
   },
   computed: {

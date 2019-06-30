@@ -1,12 +1,13 @@
 <template>
   <div>
+    <div class="name-container">Welcome, {{ name }}</div>
     <input
       type="text"
       class="todo-input"
       placeholder="What needs to be done"
       v-model="newTodo"
       @keyup.enter="addTodo"
-    >
+    />
     <todo-item v-for="todo in todosFiltered" :key="todo.id" :todo="todo" :checkAll="!anyRemaining"></todo-item>
 
     <div class="extra-container">
@@ -43,11 +44,15 @@ export default {
   data() {
     return {
       newTodo: "",
-      idForTodo: 3
+      idForTodo: 3,
+      name: ""
     };
   },
   created() {
-    this.$store.dispatch('retrieveTodos')
+    this.$store.dispatch("retrieveTodos");
+    this.$store.dispatch("retrieveName").then(response => {
+      this.name = response.data.name;
+    });
   },
   computed: {
     anyRemaining() {
@@ -76,7 +81,9 @@ export default {
 
 <style lang="scss">
 @import url("https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css");
-
+.name-container {
+  margin-bottom: 16px;
+}
 .todo-input {
   width: 100%;
   padding: 10px 18px;
@@ -148,6 +155,8 @@ button {
   font-size: 14px;
   background-color: white;
   appearance: none;
+  padding: 4px;
+  margin: 2px;
 
   &:hover {
     background: lightgreen;

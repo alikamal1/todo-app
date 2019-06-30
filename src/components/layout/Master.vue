@@ -29,10 +29,10 @@
 export default {
   computed: {
     loggedIn() {
-      return this.$store.getters.loggedIn
+      return this.$store.getters.loggedIn;
     }
   }
-}
+};
 </script>
 
 
@@ -124,5 +124,23 @@ label {
   &:hover {
     background: darken(#60bd4f, 10%);
   }
+}
+
+.server-error {
+  margin-bottom: 12px;
+  font-size: 16px;
+  padding: 10px 16px;
+  color: #a94442;
+  background: #f3dede;
+  border-radius: 4px;
+}
+
+.form-error {
+  font-size: 16px;
+  color: #a94442;
+}
+
+.input-error {
+  border: 1px solid  #a94442;
 }
 </style>

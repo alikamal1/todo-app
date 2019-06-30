@@ -1,7 +1,9 @@
 <template>
-  <div class="login-form">
+  <div class="page-wrapper login-form">
     <h2 class="login-heading">Register</h2>
     <form action="#" @submit.prevent="validateBeforeSubmit">
+      <div v-if="successMessage" class="success-message">{{ successMessage }}</div>
+
       <div v-if="serverErrors.length" class="server-error">
         <div v-for="(value, key) in serverErrors" :key="key">{{ value[0] }}</div>
       </div>
@@ -62,7 +64,8 @@ export default {
       name: "",
       email: "",
       password: "",
-      serverErrors: []
+      serverErrors: [],
+      successMessage: ""
     };
   },
   methods: {
@@ -81,8 +84,14 @@ export default {
           password: this.password
         })
         .then(response => {
+          this.successMessage = "Registered Successfully";
           this.$router.push({
-            name: "login"
+            name: "login",
+            params: { dataSuccessMessage: this.successMessage }
+          });
+          this.$toast.success({
+            title: this.successMessage,
+            message: "You can login here"
           });
         })
         .catch(error => {

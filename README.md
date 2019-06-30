@@ -4,17 +4,18 @@
 
 #### [ ✓ ] First Branch: Vue + Vuex
 
-#### [  ] Second Branch: Vue + API 
+#### [ ✓ ] Second Branch: Vue + API 
 
-#### [  ] Third Branch: Vue + Firebase 
+#### [ ✓ ] Third Branch: Vue + Firebase 
 
-#### [  ] Fourth Branch: Vue + Router 
+#### [ ✓ ] Fourth Branch: Vue + Router 
+
+#### [ ✓ ] Fifth Branch: Vue + Passport 
 
 ## API
 <a href="https://github.com/alikamal1/todo-app-api" target="_blank">https://github.com/alikamal1/todo-app-api</a>
 
 ## Project setup
-
 ```
 npm install
 ```

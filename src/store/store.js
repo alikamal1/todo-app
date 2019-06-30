@@ -1,26 +1,22 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import axios from 'axios'
+
+
 
 Vue.use(Vuex)
+axios.defaults.baseURL = 'http://todo-app-api.test/api'
 
 export const store = new Vuex.Store({
     state: {
+        token: localStorage.getItem('access_token') || null,
         filter: 'all',
-        todos: [{
-                'id': 1,
-                'title': 'Go Home',
-                'completed': false,
-                'editing': false,
-            },
-            {
-                'id': 2,
-                'title': 'Start Coding',
-                'completed': false,
-                'editing': false,
-            },
-        ]
+        todos: []
     },
     getters: {
+        loggedIn(state) {
+            return state.token != null
+        },
         remaining(state) {
             return state.todos.filter(todo => !todo.completed).length
         },
@@ -72,42 +68,153 @@ export const store = new Vuex.Store({
         checkAll(state, checked) {
             state.todos.forEach(todo => (todo.completed = checked))
         },
+        retrieveTodos(state, todos) {
+            state.todos = todos
+        },
+        retrieveToken(state, token) {
+            state.token = token
+        },
+        destroyToken(state) {
+            state.token = null
+        },
+        clearTodos(state) {
+            state.todos = []
+        },
     },
     actions: {
+        retrieveName(context) {
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
+            return new Promise((resolve, reject) => {
+                axios.get('/user').then(response => {
+                    resolve(response)
+                }).catch(error => {
+                    reject(error)
+                })
+            })
+        },
+        clearTodos(context) {
+            context.commit('clearTodos')
+        },
+        register(context, data) {
+            return new Promise((resolve, reject) => {
+                axios.post('/register', {
+                    name: data.name,
+                    email: data.email,
+                    password: data.password,
+                }).then(response => {
+                    resolve(response)
+                    console.log(response)
+                    // context.commit('addTodo', response.data)
+                }).catch(error => {
+                    reject(error)
+                    console.log(error)
+                })
+            })
+        },
+        destroyToken(context) {
+            if (context.getters.loggedIn) {
+                axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
+                return new Promise((resolve, reject) => {
+                    axios.post('/logout', ).then(response => {
+                        localStorage.removeItem('access_token')
+                        context.commit('destroyToken')
+                        resolve(response)
+                        console.log(response)
+                        // context.commit('addTodo', response.data)
+                    }).catch(error => {
+                        localStorage.removeItem('access_token')
+                        context.commit('destroyToken')
+                        reject(error)
+                        console.log(error)
+                    })
+                })
+            }
+        },
+        retrieveToken(context, credentials) {
+            return new Promise((resolve, reject) => {
+                axios.post('/login', {
+                    username: credentials.username,
+                    password: credentials.password,
+                }).then(response => {
+                    const token = response.data.access_token
+                    localStorage.setItem('access_token', token)
+                    context.commit('retrieveToken', token)
+                    resolve(response)
+                    console.log(response)
+                    // context.commit('addTodo', response.data)
+                }).catch(error => {
+                    reject(error)
+                    console.log(error)
+                })
+            })
+
+        },
+        retrieveTodos(context) {
+            axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
+            axios.get('/todos').then(response => {
+                context.commit('retrieveTodos', response.data)
+            }).catch(error => {
+                console.log(error)
+            })
+        },
         addTodo(context, todo) {
-            setTimeout(() => {
-                context.commit('addTodo', todo)
-            }, 100);
+            axios.post('/todos', {
+                title: todo.title,
+                completed: false,
+            }).then(response => {
+                context.commit('addTodo', response.data)
+            }).catch(error => {
+                console.log(error)
+            })
+
         },
         updateTodo(context, todo) {
-            setTimeout(() => {
-                context.commit('updateTodo', todo)
-            }, 100);
+            axios.patch('/todos/' + todo.id, {
+                title: todo.title,
+                completed: todo.completed,
+            }).then(response => {
+                context.commit('updateTodo', response.data)
+            }).catch(error => {
+                console.log(error)
+            })
+            // without api
+            // setTimeout(() => {
+            //     context.commit('updateTodo', todo)
+            // }, 100);
         },
         deleteTodo(context, id) {
-            setTimeout(() => {
+            axios.delete('/todos/' + id).then(response => {
                 context.commit('deleteTodo', id)
-            }, 100);
-        },
-        updateTodo(context, filter) {
-            setTimeout(() => {
-                context.commit('updateTodo', filter)
-            }, 100);
+            }).catch(error => {
+                console.log(error)
+            })
         },
         checkAll(context, checked) {
-            setTimeout(() => {
+            axios.patch('/todosCheckAll', {
+                completed: checked
+            }).then(response => {
                 context.commit('checkAll', checked)
-            }, 100)
+            }).catch(error => {
+                console.log(error)
+            })
         },
         updateFilter(context, filter) {
-            setTimeout(() => {
-                context.commit('updateFilter', filter)
-            }, 100)
+            context.commit('updateFilter', filter)
         },
         clearCompleted(context) {
-            setTimeout(() => {
+            const completed = store.state.todos
+                .filter(todo => todo.completed)
+                .map(todo => todo.id)
+
+            axios.delete('/todosDeleteCompleted', {
+                data: {
+                    todos: completed
+                }
+            }).then(response => {
                 context.commit('clearCompleted')
-            }, 100);
-        }
+            }).catch(error => {
+                console.log(error)
+            })
+        },
     }
 })
